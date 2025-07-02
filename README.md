@@ -8,7 +8,7 @@ Este repositório contém o código do **Back-End** do sistema Shadow Finance. E
 
 A arquitetura foi projetada para ser segura e escalável, com um sistema de autenticação baseado em JWT (JSON Web Tokens) e regras de permissão que garantem que cada usuário só possa acessar e manipular seus próprios dados.
 
-**🔗 Link para o repositório do Front-End:** [Shadow-Finance-System-front](https://github.com/DanielErick-dev/Shadow-Finance-system)
+**🔗 Link para o repositório do Front-End:** https://github.com/DanielErick-dev/Shadow-Finance-system-front
 
 ---
 
@@ -48,11 +48,11 @@ A arquitetura foi projetada para ser segura e escalável, com um sistema de aute
 **Passos:**
 1.  Clone o repositório:
     ```bash
-    git clone [URL_DO_SEU_REPOSITORIO_BACKEND]
+    git clone https://github.com/DanielErick-dev/Shadow-Finance-system-back.git
     ```
 2.  Navegue até o diretório do projeto:
     ```bash
-    cd Shadow-Finance-System-backend
+    cd Shadow-Finance-System-back
     ```
 3.  Crie e ative um ambiente virtual:
     ```bash
