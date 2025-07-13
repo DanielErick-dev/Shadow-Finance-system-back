@@ -24,9 +24,11 @@ INSTALLED_APPS = [
     "django_filters",
     "costumers",
     "authentication",
-    "dividend",
+    "dividends",
     "expenses",
     "installments",
+    "investiments",
+    "assets",
 ]
 
 MIDDLEWARE = [
@@ -105,7 +107,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'dividend.pagination.StandardResultsSetPagination'
+    'DEFAULT_PAGINATION_CLASS': 'dividends.pagination.StandardResultsSetPagination'
 }
 
 SIMPLE_JWT = {
