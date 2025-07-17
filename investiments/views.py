@@ -3,6 +3,7 @@ from .models import CardInvestiment, ItemInvestiment
 from .serializer import CardInvestimentSerializer, ItemInvestimentSerializer
 from rest_framework import viewsets
 from rest_framework import serializers
+from .filters import CardInvestimentMonthFilter
 
 
 class ItemInvestimentViewSet(viewsets.ModelViewSet):
@@ -12,7 +13,7 @@ class ItemInvestimentViewSet(viewsets.ModelViewSet):
     pagination_class = None
 
     def get_queryset(self):
-        return ItemInvestiment.objects.filter(user=self.request.user)
+        return ItemInvestiment.objects.filter(card__user=self.request.user)
 
     def perform_create(self, serializer):
         card_id = self.request.data.get('card')
@@ -37,6 +38,7 @@ class CardInvestimentViewSet(viewsets.ModelViewSet):
     serializer_class = CardInvestimentSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = None
+    filterset_class = CardInvestimentMonthFilter
 
     def get_queryset(self):
         return CardInvestiment.objects.filter(user=self.request.user)
