@@ -90,7 +90,7 @@ A arquitetura foi projetada para ser segura e escalável, com um sistema de aute
 ## 📝 Roadmap e Próximos Passos
 
 - [ ] Implementação dos endpoints para o módulo de **Controle de Despesas**.
-- [ ] Criação dos modelos e endpoints para a **Evolução de Investimentos**.
 - [ ] Desenvolvimento de endpoints de agregação para o **Dashboard**.
 - [ ] Refatorar a autenticação para usar **Cookies HttpOnly** para o refresh token em produção.
-- [ ] substituir sqlite por banco de dados postgres
+- [ ] substituir sqlite por banco de dados postgres.
+- [ ] configurar criação de conta no backend.
