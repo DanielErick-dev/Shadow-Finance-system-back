@@ -10,7 +10,6 @@ class ItemInvestimentViewSet(viewsets.ModelViewSet):
     queryset = ItemInvestiment.objects.all()
     serializer_class = ItemInvestimentSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = None
 
     def get_queryset(self):
         return ItemInvestiment.objects.filter(card__user=self.request.user)
@@ -37,7 +36,6 @@ class CardInvestimentViewSet(viewsets.ModelViewSet):
     queryset = CardInvestiment.objects.all()
     serializer_class = CardInvestimentSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = None
     filterset_class = CardInvestimentMonthFilter
 
     def get_queryset(self):
