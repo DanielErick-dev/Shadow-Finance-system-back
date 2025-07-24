@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     "authentication",
     "dividends",
     "expenses",
-    "installments",
     "investiments",
     "assets",
 ]

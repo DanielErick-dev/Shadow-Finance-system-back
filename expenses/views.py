@@ -1,30 +1,31 @@
-from .models import Expense, TypeOfExpense
-from rest_framework import generics
-from .serializer import TypeOfExpenseSerializer, ExpenseSerializer
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.filters import SearchFilter
+from .models import Expense, Category
+from .serializer import ExpenseSerializer, CategorySerializer
+from .mixins import UserQuerysetMixin
+from .filters import ExpenseFilter
+import django_filters
 
 
-class TypeOfExpenseListApiView(generics.ListCreateAPIView):
-    queryset = TypeOfExpense.objects.all()
-    serializer_class = TypeOfExpenseSerializer
+class CategoryViewSet(UserQuerysetMixin, viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        return TypeOfExpense.objects.filter(user=user)
+    pagination_class = None
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
 
-class ExpenseListCreateApiView(generics.ListCreateAPIView):
+class ExpenseViewSet(UserQuerysetMixin, viewsets.ModelViewSet):
     queryset = Expense.objects.all()
     serializer_class = ExpenseSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        return Expense.objects.filter(user=user)
+    filterset_class = ExpenseFilter
+    filter_backends = [SearchFilter, django_filters.rest_framework.DjangoFilterBackend]
+    search_fields = ['name']
+    pagination_class = None
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

@@ -1,16 +1,11 @@
-from django.urls import path
-from .views import ExpenseListCreateApiView, TypeOfExpenseListApiView
+from .views import ExpenseViewSet, CategoryViewSet
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
+router = DefaultRouter()
+router.register(r'categories', CategoryViewSet, basename='expense-category')
+router.register(r'expenses', ExpenseViewSet, basename='expense')
 
 urlpatterns = [
-    path(
-        'expenses/',
-        ExpenseListCreateApiView.as_view(),
-        name='expense_list_create'
-    ),
-    path(
-        'type_of_expenses/',
-        TypeOfExpenseListApiView.as_view(),
-        name='type_of_expense_list_api_view'
-    ),
+    path('', include(router.urls))
 ]
