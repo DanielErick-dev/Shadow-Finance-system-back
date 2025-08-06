@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Expense
+from .models import Category, Expense, InstallmentExpense
 
 
 @admin.register(Category)
@@ -30,4 +30,32 @@ class ExpenseAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field == 'category':
             kwargs["queryset"] = Category.objects.filter(user=request.user)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+@admin.register(InstallmentExpense)
+class InstallmentExpenseAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'name',
+        'total_amount',
+        'installments_quantity',
+        'first_due_date',
+        'category',
+    )
+    search_fields = ('name', 'user__username', 'category__name', )
+    list_filter = ('first_due_date', 'user', 'category', )
+    ordering = ('-first_due_date', )
+    autocomplete_fields = ['category']
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        return queryset.filter(user=request.user)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'category':
+            if not request.user.is_superuser:
+                kwargs['queryset'] = Category.objects.filter(user=request.user)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
