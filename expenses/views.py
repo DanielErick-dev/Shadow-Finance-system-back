@@ -37,6 +37,7 @@ class InstallmentExpenseViewSet(UserQuerysetMixin, viewsets.ModelViewSet):
     queryset = InstallmentExpense.objects.all()
     serializer_class = InstallmentExpenseSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = None
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
