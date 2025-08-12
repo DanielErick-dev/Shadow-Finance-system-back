@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Category, Expense, InstallmentExpense
+from .services.installment_manager_service import InstallmentExpenseService
 
 
 @admin.register(Category)
@@ -59,3 +60,17 @@ class InstallmentExpenseAdmin(admin.ModelAdmin):
             if not request.user.is_superuser:
                 kwargs['queryset'] = Category.objects.filter(user=request.user)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            service = InstallmentExpenseService(
+                user=request.user,
+                name=form.cleaned_data.get('name'),
+                total_amount=form.cleaned_data.get('total_amount'),
+                installments_quantity=form.cleaned_data.get('installments_quantity'),
+                first_due_date=form.cleaned_data.get('first_due_date'),
+                category=form.cleaned_data.get('category')
+            )
+            service.create()
+        else:
+            return super().save_model(request, obj, form, change)
