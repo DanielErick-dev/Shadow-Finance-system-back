@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Expense, InstallmentExpense
+from .models import Category, Expense, InstallmentExpense, RecurringExpense, PaidRecurringExpense
 from .services.installment_manager_service import InstallmentExpenseService
 
 
@@ -74,3 +74,19 @@ class InstallmentExpenseAdmin(admin.ModelAdmin):
             service.create()
         else:
             return super().save_model(request, obj, form, change)
+
+
+@admin.register(RecurringExpense)
+class RecurringExpenseAdmin(admin.ModelAdmin):
+    list_display = ('name', 'user', 'amount', 'due_day', 'start_date', 'end_date', )
+    list_filter = ('active', 'user', 'category', )
+    ordering = ('name', )
+
+
+@admin.register(PaidRecurringExpense)
+class PaidRecurringExpenseAdmin(admin.ModelAdmin):
+    list_display = ('get_recurring_name', 'payment_date', 'month', 'year')
+
+    @admin.display(description='Despesa Recorrente')
+    def get_recurring_name(self, obj):
+        return obj.recurring_expense.name
