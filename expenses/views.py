@@ -16,6 +16,7 @@ from .mixins import UserQuerysetMixin
 from .filters import ExpenseFilter
 import django_filters
 from datetime import datetime
+from expenses.services.virtualization_logic_service import MonthlyExpenseLogic
 
 
 class CategoryViewSet(UserQuerysetMixin, viewsets.ModelViewSet):
@@ -97,49 +98,11 @@ class MonthlyExpensesView(APIView):
             month = int(request.query_params.get('month', datetime.date.today().month))
         except (TypeError, ValueError):
             return Response({
-                'error': 'parãmetros de ano/mês inválidos'}, status=status.HTTP_400_BAD_REQUEST)
-        real_expenses = Expense.objects.filter(
-            user=request.user,
-            due_date__year=year,
-            due_date__month=month
-        )
+                'error': 'parametros de ano/mês inválidos'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
-        recurring_contracts = RecurringExpense.objects.filter(
-            user=request.user,
-            active=True,
-            start_date__lte=datetime.date(year, month, 28)
-        )
-
-        paid_recurring_ids = PaidRecurringExpense.objects.filter(
-            recurring_expense__user=request.user,
-            year=year,
-            month=month
-        ).values_list('recurring_expense_id', float=True)
-
-        virtual_expenses = []
-        for contract in recurring_contracts:
-            if contract.end_date and contract.end_date < datetime.date(year, month, 1):
-                continue
-    
-            virtual_expense = {
-                'id': f'rec-{contract.id}',
-                'name': contract.name,
-                'amount': contract.amount,
-                'due_date': datetime.date(year, month, contract.due_day),
-                'category': CategorySerializer(
-                    contract.category).data if contract.category else None,
-                'paid': contract.id in paid_recurring_ids,
-                'is_recurring': True
-            }
-            virtual_expenses.append(virtual_expense)
-        real_expenses_data = ExpenseSerializer(real_expenses, many=True).data
-
-        for expense_data in real_expenses_data:
-            expense_data['is_recurring'] = False
- 
-        combined_list = sorted(
-            real_expenses_data + virtual_expenses,
-            key=lambda x: x['due_date']
-        )
+        logic_service = MonthlyExpenseLogic(user=request.user, year=year, month=month)
+        combined_list = logic_service.get_monthly_expenses
 
         return Response(combined_list)
