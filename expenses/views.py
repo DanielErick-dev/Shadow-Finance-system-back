@@ -15,7 +15,7 @@ from expenses.services.installment_manager_service import InstallmentExpenseServ
 from .mixins import UserQuerysetMixin
 from .filters import ExpenseFilter
 import django_filters
-from datetime import datetime
+import datetime
 from expenses.services.virtualization_logic_service import MonthlyExpenseLogic
 
 
@@ -69,6 +69,7 @@ class RecurringExpenseViewSet(UserQuerysetMixin, viewsets.ModelViewSet):
     queryset = RecurringExpense.objects.all()
     serializer_class = RecurringExpenseSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = None
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -91,11 +92,12 @@ class PaidRecurringExpenseViewSet(UserQuerysetMixin, viewsets.ModelViewSet):
 
 class MonthlyExpensesView(APIView):
     permission_classes = [IsAuthenticated]
+    pagination_class = None
 
     def get(self, request, *args, **kwargs):
         try:
-            year = int(request.query_params.get('year', datetime.date.today().year))
-            month = int(request.query_params.get('month', datetime.date.today().month))
+            year = int(request.query_params.get('due_date__year', datetime.date.today().year))
+            month = int(request.query_params.get('due_date__month', datetime.date.today().month))
         except (TypeError, ValueError):
             return Response({
                 'error': 'parametros de ano/mês inválidos'},
@@ -103,6 +105,6 @@ class MonthlyExpensesView(APIView):
             )
 
         logic_service = MonthlyExpenseLogic(user=request.user, year=year, month=month)
-        combined_list = logic_service.get_monthly_expenses
+        combined_list = logic_service.get_monthly_expenses()
 
         return Response(combined_list)
