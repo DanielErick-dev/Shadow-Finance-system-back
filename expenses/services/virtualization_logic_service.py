@@ -17,6 +17,10 @@ class MonthlyExpenseLogic:
 
         for expense_data in real_expenses_data:
             expense_data['is_recurring'] = False
+            if expense_data.get('installment_origin'):
+                expense_data['expense_type'] = 'installment'
+            else:
+                expense_data['expense_type'] = 'simple'
 
         combined_list = real_expenses_data + virtual_expenses
         combined_list.sort(key=lambda x: x['due_date'])
@@ -58,6 +62,7 @@ class MonthlyExpenseLogic:
                 'category': CategorySerializer(contract.category).data if contract.category else None,
                 'paid': contract.id in paid_recurring_ids,
                 'is_recurring': True,
+                'expense_type': 'recurring',
                 'payment_date': None,
                 'installment_origin': None,
                 'created_at': contract.created_at.isoformat()
