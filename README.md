@@ -4,7 +4,7 @@ API RESTful robusta e segura, construída com Python, Django e Django REST Frame
 
 ## 🚀 Sobre o Projeto
 
-Este repositório contém o código do **Back-End** do sistema Shadow Finance. Ele é responsável por toda a lógica de negócio, segurança, manipulação de dados e por fornecer os endpoints que o frontend consome.
+Este repositório contém o código do **Back-End** do sistema Shadow Finance System. Ele é responsável por toda a lógica de negócio, segurança, manipulação de dados e por fornecer os endpoints que o frontend consome.
 
 A arquitetura foi projetada para ser segura e escalável, com um sistema de autenticação baseado em JWT (JSON Web Tokens) e regras de permissão que garantem que cada usuário só possa acessar e manipular seus próprios dados.
 
@@ -88,9 +88,6 @@ A arquitetura foi projetada para ser segura e escalável, com um sistema de aute
 ---
 
 ## 📝 Roadmap e Próximos Passos
-
-- [ ] Implementação dos endpoints para o módulo de **Controle de Despesas**.
 - [ ] Desenvolvimento de endpoints de agregação para o **Dashboard**.
 - [ ] Refatorar a autenticação para usar **Cookies HttpOnly** para o refresh token em produção.
 - [ ] substituir sqlite por banco de dados postgres.
-- [ ] configurar criação de conta no backend.
